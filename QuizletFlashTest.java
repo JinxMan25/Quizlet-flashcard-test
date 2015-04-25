@@ -24,8 +24,6 @@ public class QuizletFlashTest{
     public static void main(String[] args){
 
        frame = new JFrame("Quizlet");
-       frame.setSize(1000, 500);
-       frame.setBackground(Color.WHITE);
 
        CardLayout cl = new CardLayout();
        mainPanel = new JPanel();
@@ -39,8 +37,9 @@ public class QuizletFlashTest{
 
        //frame.setLayout(new GridLayout(1, 1));
 
+       frame.setSize(1000, 500);
+       frame.setBackground(Color.WHITE);
        frame.add(mainPanel);
-       frame.pack();
 
        frame.setVisible(true);
     }
