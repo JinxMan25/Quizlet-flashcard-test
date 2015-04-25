@@ -1,0 +1,2 @@
+!javac -cp ~/Downloads/org.json-20120521.jar QuizletFlashTest.java QuizletPanel.java CustomButton.java
+java -cp ~/Downloads/org.json-20120521.jar:. QuizletFlashTest

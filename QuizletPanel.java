@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.Reader;
 import java.net.URL;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.json.JSONException;
 import java.nio.charset.Charset;
 
@@ -100,8 +101,8 @@ public class QuizletPanel extends JPanel{
 
         public void actionPerformed(ActionEvent ae) {
           try {
-          JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/13913473?client_id=QbgwbRMGAU&whitespace=1");
-          System.out.println(json.toString());
+          JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/search/sets?q="+userAnswerField1.getText()+"&client_id=QbgwbRMGAU&whitespace=1");
+          System.out.println(json.getJSONArray("sets").getJSONObject(0));
           } catch (IOException ex){
           } catch (JSONException ex){
           }

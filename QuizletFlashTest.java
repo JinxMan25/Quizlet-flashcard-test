@@ -1,5 +1,6 @@
 
 import java.awt.Color;
+import java.awt.CardLayout;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,19 +18,29 @@ import javax.swing.JPanel;
 public class QuizletFlashTest{
 
     static JFrame frame;
+    static JPanel mainPanel;
     static JPanel buttonPanel;
 
     public static void main(String[] args){
 
-       frame = new JFrame("State-Capital Matcher");
-       frame.setSize(1000, 1000);
-       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       frame = new JFrame("Quizlet");
+       frame.setSize(1000, 500);
        frame.setBackground(Color.WHITE);
 
-       frame.setLayout(new GridLayout(1, 1));
-
+       CardLayout cl = new CardLayout();
+       mainPanel = new JPanel();
        buttonPanel = new QuizletPanel();
-       frame.add(buttonPanel);
+
+       mainPanel.setLayout(cl);
+       mainPanel.add(buttonPanel, "1");
+       cl.show(mainPanel, "1");
+
+       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+       //frame.setLayout(new GridLayout(1, 1));
+
+       frame.add(mainPanel);
+       frame.pack();
 
        frame.setVisible(true);
     }
