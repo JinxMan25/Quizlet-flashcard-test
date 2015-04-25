@@ -13,6 +13,14 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.net.URL;
+import org.json.JSONObject;
+import org.json.JSONException;
+import java.nio.charset.Charset;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -54,10 +62,30 @@ public class QuizletPanel extends JPanel{
       switchButton = new JButton("Go!");
       switchButton.setAlignmentX(CENTER_ALIGNMENT);
       add(switchButton);
-      switchButton.addActionListener(new SwitchButtonListener());
+      switchButton.addActionListener(new getQuizletJSON());
       
         
     }
+  private static String readAll(Reader rd) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    int cp;
+    while ((cp = rd.read()) != -1) {
+      sb.append((char) cp);
+    }
+    return sb.toString();
+  }
+
+  public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+    InputStream is = new URL(url).openStream();
+    try {
+      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+      String jsonText = readAll(rd);
+      JSONObject json = new JSONObject(jsonText);
+      return json;
+    } finally {
+      is.close();
+    }
+  }
 
     class SetUpButtonActionListener implements ActionListener{
 
@@ -68,17 +96,16 @@ public class QuizletPanel extends JPanel{
             
         }
     }
-    class SwitchButtonListener implements ActionListener{
+    class getQuizletJSON implements ActionListener{
 
         public void actionPerformed(ActionEvent ae) {
-          if (isGetByCapital) {
-            switchButton.setText("Get answer by Capital");
-            isGetByCapital = false;
-          } else {
-            switchButton.setText("Get answer by State ");
-            isGetByCapital = true;
+          try {
+          JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/13913473?client_id=QbgwbRMGAU&whitespace=1");
+          System.out.println(json.toString());
+          } catch (IOException ex){
+          } catch (JSONException ex){
           }
-            
+
         }
     }
 }
