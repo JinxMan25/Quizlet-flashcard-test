@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.nio.charset.Charset;
+import java.awt.Color;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -39,6 +40,7 @@ public class QuizletPanel extends JPanel{
     private BufferedImage image;
     boolean isGetByCapital = true;
     JTextField userAnswerField1;
+    JPanel searchResultsPanel = new JPanel();
     JLabel verdict;
     
 
@@ -64,6 +66,8 @@ public class QuizletPanel extends JPanel{
       switchButton.setAlignmentX(CENTER_ALIGNMENT);
       add(switchButton);
       switchButton.addActionListener(new getQuizletJSON());
+      searchResultsPanel.setLayout(new BoxLayout(searchResultsPanel, BoxLayout.PAGE_AXIS));
+      add(searchResultsPanel);
       
         
     }
@@ -100,6 +104,8 @@ public class QuizletPanel extends JPanel{
     class getQuizletJSON implements ActionListener{
 
         public void actionPerformed(ActionEvent ae) {
+          searchResultsPanel.removeAll();
+          searchResultsPanel.setBackground(new Color(200,200,200));
           try {
           JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/search/sets?q="+userAnswerField1.getText()+"&client_id=QbgwbRMGAU&whitespace=1");
           //System.out.println(json.getJSONArray("sets").getJSONObject(0));
@@ -113,9 +119,11 @@ public class QuizletPanel extends JPanel{
           JSONResult resultLabel2  = new JSONResult(second);
           resultLabel2.setAlignmentX(CENTER_ALIGNMENT);
 
-          add(resultLabel);
-          add(resultLabel2);
+          searchResultsPanel.add(resultLabel);
+          searchResultsPanel.add(resultLabel2);
 
+          searchResultsPanel.revalidate();
+          searchResultsPanel.repaint();
           revalidate();
           } catch (IOException ex){
           } catch (JSONException ex){
