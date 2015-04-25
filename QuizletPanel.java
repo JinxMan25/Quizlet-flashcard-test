@@ -35,7 +35,7 @@ import java.nio.charset.Charset;
  */
 public class QuizletPanel extends JPanel{
     JButton setUpButton, checkMeButton, switchButton;
-    JLabel search;
+    JSONResult search;
     private BufferedImage image;
     boolean isGetByCapital = true;
     JTextField userAnswerField1;
@@ -52,7 +52,7 @@ public class QuizletPanel extends JPanel{
       } catch (IOException ex){
       }
 
-      search = new JLabel("Search: ");
+      search = new JSONResult("Search: ");
       search.setAlignmentX(CENTER_ALIGNMENT);
       add(search);
       
@@ -102,7 +102,21 @@ public class QuizletPanel extends JPanel{
         public void actionPerformed(ActionEvent ae) {
           try {
           JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/search/sets?q="+userAnswerField1.getText()+"&client_id=QbgwbRMGAU&whitespace=1");
-          System.out.println(json.getJSONArray("sets").getJSONObject(0));
+          //System.out.println(json.getJSONArray("sets").getJSONObject(0));
+          String firstResult = json.getJSONArray("sets").getJSONObject(0).get("title").toString();
+          System.out.println(firstResult);
+          JSONResult resultLabel  = new JSONResult(firstResult);
+          resultLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+          String second = json.getJSONArray("sets").getJSONObject(1).get("title").toString();
+          System.out.println(second);
+          JSONResult resultLabel2  = new JSONResult(second);
+          resultLabel2.setAlignmentX(CENTER_ALIGNMENT);
+
+          add(resultLabel);
+          add(resultLabel2);
+
+          revalidate();
           } catch (IOException ex){
           } catch (JSONException ex){
           }
