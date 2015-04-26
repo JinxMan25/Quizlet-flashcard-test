@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.awt.CardLayout;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -36,7 +37,7 @@ import java.awt.Color;
  */
 public class QuizletPanel extends JPanel{
     JButton setUpButton, checkMeButton, switchButton;
-    JSONResult search;
+    JLabel search;
     private BufferedImage image;
     boolean isGetByCapital = true;
     JTextField userAnswerField1;
@@ -46,7 +47,9 @@ public class QuizletPanel extends JPanel{
     
 
     public QuizletPanel(){
+
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
       try {
         image = ImageIO.read(new File("Quizlet_logo.png"));
         JLabel piclabel = new JLabel(new ImageIcon(image));
@@ -56,7 +59,7 @@ public class QuizletPanel extends JPanel{
       }
 
 
-      search = new JSONResult("Search: ");
+      search = new JLabel("Search: ");
       search.setAlignmentX(CENTER_ALIGNMENT);
       add(search);
       
@@ -73,6 +76,7 @@ public class QuizletPanel extends JPanel{
       
         
     }
+
   private static String readAll(Reader rd) throws IOException {
     StringBuilder sb = new StringBuilder();
     int cp;

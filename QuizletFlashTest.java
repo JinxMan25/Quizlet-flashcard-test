@@ -27,9 +27,11 @@ public class QuizletFlashTest{
 
        CardLayout cl = new CardLayout();
        mainPanel = new JPanel();
-       buttonPanel = new QuizletPanel();
 
        mainPanel.setLayout(cl);
+
+       buttonPanel = new QuizletPanel(mainPanel, cl);
+
        mainPanel.add(buttonPanel, "1");
        cl.show(mainPanel, "1");
 
