@@ -42,6 +42,7 @@ public class QuizletPanel extends JPanel{
     JTextField userAnswerField1;
     JPanel searchResultsPanel = new JPanel();
     JLabel verdict;
+    JLabel imageLabel = new JLabel();
     
 
     public QuizletPanel(){
@@ -53,6 +54,7 @@ public class QuizletPanel extends JPanel{
         add(piclabel);
       } catch (IOException ex){
       }
+
 
       search = new JSONResult("Search: ");
       search.setAlignmentX(CENTER_ALIGNMENT);
@@ -105,31 +107,32 @@ public class QuizletPanel extends JPanel{
 
         public void actionPerformed(ActionEvent ae) {
           searchResultsPanel.removeAll();
-          searchResultsPanel.setBackground(new Color(200,200,200));
           try {
           JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/search/sets?q="+userAnswerField1.getText()+"&client_id=QbgwbRMGAU&whitespace=1");
+
+
           //System.out.println(json.getJSONArray("sets").getJSONObject(0));
-          String firstResult = json.getJSONArray("sets").getJSONObject(0).get("title").toString();
-          System.out.println(firstResult);
-          JSONResult resultLabel  = new JSONResult(firstResult);
-          resultLabel.setAlignmentX(CENTER_ALIGNMENT);
+          JSONArray setArray = json.getJSONArray("sets");
+          for (int i = 0;i<=30; i++) {
+            JSONObject firstResult = setArray.getJSONObject(i);
+            String title = firstResult.get("title").toString();
 
-          String second = json.getJSONArray("sets").getJSONObject(1).get("title").toString();
-          System.out.println(second);
-          JSONResult resultLabel2  = new JSONResult(second);
-          resultLabel2.setAlignmentX(CENTER_ALIGNMENT);
-
-          searchResultsPanel.add(resultLabel);
-          searchResultsPanel.add(resultLabel2);
-
+            JSONResult resultLabel  = new JSONResult(title);
+            resultLabel.setAlignmentX(CENTER_ALIGNMENT);
+            resultLabel.terms = firstResult.get("term_count").toString();
+            resultLabel.id = firstResult.get("id").toString();
+            searchResultsPanel.add(resultLabel);
           searchResultsPanel.revalidate();
           searchResultsPanel.repaint();
+          }
+
+
           revalidate();
           } catch (IOException ex){
           } catch (JSONException ex){
-          }
-
+          } 
         }
     }
+
 }
 
