@@ -11,24 +11,28 @@ public class JSONResult extends JLabel implements MouseListener {
    this.setOpaque(true);
    this.addMouseListener(this);
  } 
+
  public void mouseClicked(MouseEvent e) {
 
-       System.out.println(this.id);
-   }
+  System.out.println(this.id);
+
+ }
 
  public void mousePressed(MouseEvent e) {
-       }
+ }
 
  public void mouseReleased(MouseEvent e) {
-       }
+ }
 
  public void mouseEntered(MouseEvent e) {
+
    this.setBackground(Color.BLACK);
    this.setForeground(Color.WHITE);
-       }
+
+ }
 
  public void mouseExited(MouseEvent e) {
    this.setBackground(Color.white);
    this.setForeground(Color.black);
-       }
-  }
+ }
+}

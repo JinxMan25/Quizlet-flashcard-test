@@ -27,13 +27,11 @@ public class QuizletFlashTest{
 
        CardLayout cl = new CardLayout();
        mainPanel = new JPanel();
+       //buttonPanel = new QuizletPanel();
 
-       mainPanel.setLayout(cl);
-
-       buttonPanel = new QuizletPanel(mainPanel, cl);
-
-       mainPanel.add(buttonPanel, "1");
-       cl.show(mainPanel, "1");
+       //mainPanel.setLayout(cl);
+       //mainPanel.add(buttonPanel, "1");
+       //cl.show(mainPanel, "1");
 
        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -41,7 +39,7 @@ public class QuizletFlashTest{
 
        frame.setSize(1000, 500);
        frame.setBackground(Color.WHITE);
-       frame.add(mainPanel);
+       frame.getContentPane().add(new QuizletPanel(frame));
 
        frame.setVisible(true);
     }

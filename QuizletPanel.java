@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -7,6 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.Graphics;
+import java.awt.Container;
 import java.awt.image.BufferedImage;
 import java.awt.CardLayout;
 import java.io.File;
@@ -36,28 +38,34 @@ import java.awt.Color;
  * @author zoj5041
  */
 public class QuizletPanel extends JPanel{
-    JButton setUpButton, checkMeButton, switchButton;
+    JButton switchButton;
     JLabel search;
     private BufferedImage image;
-    boolean isGetByCapital = true;
     JTextField userAnswerField1;
     JPanel searchResultsPanel = new JPanel();
     JLabel verdict;
+    JFrame frame;
     JLabel imageLabel = new JLabel();
+
     
 
-    public QuizletPanel(){
+    public QuizletPanel(JFrame theFrame){
+      frame = theFrame;
+      
+    addHomePage();    
 
-      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+  }
+  public void addHomePage(){
 
-      try {
-        image = ImageIO.read(new File("Quizlet_logo.png"));
-        JLabel piclabel = new JLabel(new ImageIcon(image));
-        piclabel.setAlignmentX(CENTER_ALIGNMENT);
-        add(piclabel);
-      } catch (IOException ex){
-      }
+    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
+    try {
+      image = ImageIO.read(new File("Quizlet_logo.png"));
+      JLabel piclabel = new JLabel(new ImageIcon(image));
+      piclabel.setAlignmentX(CENTER_ALIGNMENT);
+      add(piclabel);
+    } catch (IOException ex){
+    }
 
       search = new JLabel("Search: ");
       search.setAlignmentX(CENTER_ALIGNMENT);
@@ -73,9 +81,17 @@ public class QuizletPanel extends JPanel{
       switchButton.addActionListener(new getQuizletJSON());
       searchResultsPanel.setLayout(new BoxLayout(searchResultsPanel, BoxLayout.PAGE_AXIS));
       add(searchResultsPanel);
-      
-        
-    }
+  }
+  public void removeHomePage(){
+    System.out.println("Test");
+    Container pane = frame.getContentPane();
+
+    pane.remove(QuizletPanel.this);
+    pane.revalidate();
+    pane.repaint();
+    revalidate();
+    repaint();
+  }
 
   private static String readAll(Reader rd) throws IOException {
     StringBuilder sb = new StringBuilder();
@@ -126,12 +142,16 @@ public class QuizletPanel extends JPanel{
             resultLabel.terms = firstResult.get("term_count").toString();
             resultLabel.id = firstResult.get("id").toString();
             searchResultsPanel.add(resultLabel);
-          searchResultsPanel.revalidate();
-          searchResultsPanel.repaint();
+            searchResultsPanel.revalidate();
+            searchResultsPanel.repaint();
           }
 
+          frame.getContentPane().removeAll();
+          frame.revalidate();
+          frame.repaint();
+            revalidate();
+            repaint();
 
-          revalidate();
           } catch (IOException ex){
           } catch (JSONException ex){
           } 
