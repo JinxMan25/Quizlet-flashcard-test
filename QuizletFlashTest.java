@@ -31,7 +31,33 @@ public class QuizletFlashTest{
     static JFrame frame;
     static JPanel mainPanel;
     static JPanel buttonPanel;
+    static CardLayout cl = new CardLayout();
+    static JPanel test = new JPanel();
 
+    public static void main(String[] args){
+
+       frame = new JFrame("Quizlet");
+
+       mainPanel = new JPanel();
+       QuizletPanel buttonPanel = new QuizletPanel(frame);
+
+       test.add(new JButton("test"));
+
+       mainPanel.setLayout(cl);
+       mainPanel.add(buttonPanel, "1");
+       mainPanel.add(test, "2");
+       cl.show(mainPanel, "1");
+
+       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+       //frame.setLayout(new GridLayout(1, 1));
+
+       frame.setSize(1000, 500);
+       frame.setBackground(Color.WHITE);
+       frame.getContentPane().add(mainPanel);
+
+       frame.setVisible(true);
+    }
     public static class QuizletPanel extends JPanel{
         JButton switchButton;
         JLabel search;
@@ -186,14 +212,18 @@ public class QuizletFlashTest{
 
      public void mouseClicked(MouseEvent e){
 
-      System.out.println(this.id);
-      frame.getContentPane().removeAll();
-      JLabel test = new JLabel("Hello varld");
-      test.getPreferredSize();
+       JPanel whatever = new JPanel();
+       whatever.setLayout(new BoxLayout(whatever, BoxLayout.PAGE_AXIS));
+       mainPanel.add(whatever, "test");
+       JButton testButton = new JButton("Go back");
+       testButton.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent ae) {
+           cl.show(mainPanel, "1");
+         }
+       });
+       whatever.add(testButton);
 
-      frame.getContentPane().add(test);
-      frame.revalidate();
-      frame.repaint();
+       cl.show(mainPanel,"test");
 
      }
 
@@ -216,28 +246,6 @@ public class QuizletFlashTest{
      }
     }
 
-    }
-    public static void main(String[] args){
-
-       frame = new JFrame("Quizlet");
-
-       CardLayout cl = new CardLayout();
-       mainPanel = new JPanel();
-       QuizletPanel buttonPanel = new QuizletPanel(frame);
-
-       mainPanel.setLayout(cl);
-       mainPanel.add(buttonPanel, "1");
-       cl.show(mainPanel, "1");
-
-       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-       //frame.setLayout(new GridLayout(1, 1));
-
-       frame.setSize(1000, 500);
-       frame.setBackground(Color.WHITE);
-       frame.getContentPane().add(mainPanel);
-
-       frame.setVisible(true);
     }
 }    
 
