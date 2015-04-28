@@ -16,6 +16,7 @@ public class JSONResult extends JLabel implements MouseListener {
 
   System.out.println(this.id);
 
+
  }
 
  public void mousePressed(MouseEvent e) {
