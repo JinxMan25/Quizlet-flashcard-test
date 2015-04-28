@@ -1,5 +1,4 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -82,6 +81,30 @@ public class QuizletPanel extends JPanel{
       searchResultsPanel.setLayout(new BoxLayout(searchResultsPanel, BoxLayout.PAGE_AXIS));
       add(searchResultsPanel);
   }
+  public void addHome(){
+    try {
+      image = ImageIO.read(new File("Quizlet_logo.png"));
+      JLabel piclabel = new JLabel(new ImageIcon(image));
+      piclabel.setAlignmentX(CENTER_ALIGNMENT);
+      frame.getContentPane().add(piclabel);
+    } catch (IOException ex){
+    }
+
+      search = new JLabel("Search: ");
+      search.setAlignmentX(CENTER_ALIGNMENT);
+      frame.getContentPane().add(search);
+      
+      userAnswerField1 = new JTextField("                    ");
+      userAnswerField1.setMaximumSize(userAnswerField1.getPreferredSize());
+      frame.getContentPane().add(userAnswerField1);
+      
+      switchButton = new JButton("Go!");
+      switchButton.setAlignmentX(CENTER_ALIGNMENT);
+      frame.getContentPane().add(switchButton);
+      switchButton.addActionListener(new getQuizletJSON());
+      searchResultsPanel.setLayout(new BoxLayout(searchResultsPanel, BoxLayout.PAGE_AXIS));
+      frame.getContentPane().add(searchResultsPanel);
+  }
   public void removeHomePage(){
     System.out.println("Test");
     Container pane = frame.getContentPane();
@@ -146,17 +169,56 @@ public class QuizletPanel extends JPanel{
             searchResultsPanel.repaint();
           }
 
-          frame.getContentPane().removeAll();
           frame.revalidate();
           frame.repaint();
-            revalidate();
-            repaint();
 
           } catch (IOException ex){
           } catch (JSONException ex){
           } 
         }
     }
+
+public class JSONResult extends JLabel implements MouseListener{
+  public String id;
+  public String terms;
+ 
+  public JSONResult(String name){
+   super(name);
+   this.setOpaque(true);
+   this.addMouseListener(this);
+ } 
+
+ public void mouseClicked(MouseEvent e){
+
+  System.out.println(this.id);
+  frame.getContentPane().removeAll();
+  JLabel test = new JLabel("Hello varld");
+  test.getPreferredSize();
+
+  frame.getContentPane().add(test);
+  frame.revalidate();
+  frame.repaint();
+
+ }
+
+ public void mousePressed(MouseEvent e) {
+ }
+
+ public void mouseReleased(MouseEvent e) {
+ }
+
+ public void mouseEntered(MouseEvent e) {
+
+   this.setBackground(Color.BLACK);
+   this.setForeground(Color.WHITE);
+
+ }
+
+ public void mouseExited(MouseEvent e) {
+   this.setBackground(Color.white);
+   this.setForeground(Color.black);
+ }
+}
 
 }
 
