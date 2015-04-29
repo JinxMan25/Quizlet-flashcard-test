@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
@@ -212,29 +213,16 @@ public class QuizletFlashTest{
 
     public class JSONResult extends JLabel implements MouseListener{
       public String id;
+      public JPanel whatever = new JPanel();
       public String terms;
+      public Font goBack = new Font("Arial", Font.BOLD, 18);
      
       public JSONResult(String name){
        super(name);
        this.setOpaque(true);
        this.addMouseListener(this);
      } 
-
-     public void mouseClicked(MouseEvent e){
-       Font goBack = new Font("Arial", Font.BOLD, 18);
-
-       JPanel whatever = new JPanel();
-       whatever.setLayout(new GridLayout(5,5));
-       mainPanel.add(new JScrollPane(whatever), "test");
-       JButton testButton = new JButton("Go back");
-       testButton.setFont(goBack);
-       testButton.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent ae) {
-           cl.show(mainPanel, "1");
-         }
-       });
-
-       whatever.add(testButton);
+      public void getSearchResults(){
 
        try {
          JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/"+this.id+"?client_id=QbgwbRMGAU&whitespace=1&total_results=40");
@@ -255,6 +243,23 @@ public class QuizletFlashTest{
        } catch (IOException ex){
        } catch (JSONException ex){
        }
+      }
+
+     public void mouseClicked(MouseEvent e){
+
+       whatever.setLayout(new GridLayout(5,5));
+       mainPanel.add(new JScrollPane(whatever), "test");
+       JButton testButton = new JButton("Go back");
+       testButton.setFont(goBack);
+       testButton.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent ae) {
+           cl.show(mainPanel, "1");
+         }
+       });
+
+       whatever.add(testButton);
+      getSearchResults();
+
 
        cl.show(mainPanel,"test");
 
