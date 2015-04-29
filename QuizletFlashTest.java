@@ -108,10 +108,14 @@ public class QuizletFlashTest{
           JScrollPane searchScrollPane = new JScrollPane(searchResultsPanel);
           searchScrollPane.setBorder(BorderFactory.createEmptyBorder());
           add(searchScrollPane);
+        ImageIcon ii = new ImageIcon(this.getClass().getResource("./ajax-loader.gif"));
+            imageLabel.setIcon(ii);
+              imageLabel.setAlignmentX(CENTER_ALIGNMENT);
+          searchResultsPanel.add(imageLabel, java.awt.BorderLayout.CENTER);
       }
       public void addHome(){
         try {
-          image = ImageIO.read(new File("Quizlet_logo.png"));
+          image = ImageIO.read(new File("./ajax-loader.gif"));
           JLabel piclabel = new JLabel(new ImageIcon(image));
           piclabel.setAlignmentX(CENTER_ALIGNMENT);
           frame.getContentPane().add(piclabel);
