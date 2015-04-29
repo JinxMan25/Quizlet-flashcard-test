@@ -3,6 +3,7 @@ import java.io.*;
 import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -111,10 +112,6 @@ public class QuizletFlashTest{
           JScrollPane searchScrollPane = new JScrollPane(searchResultsPanel);
           searchScrollPane.setBorder(BorderFactory.createEmptyBorder());
           add(searchScrollPane);
-        ImageIcon ii = new ImageIcon(this.getClass().getResource("./ajax-loader.gif"));
-            imageLabel.setIcon(ii);
-              imageLabel.setAlignmentX(CENTER_ALIGNMENT);
-          searchResultsPanel.add(imageLabel, java.awt.BorderLayout.CENTER);
       }
       public void addHome(){
         try {
@@ -185,31 +182,64 @@ public class QuizletFlashTest{
 
             public void actionPerformed(ActionEvent ae) {
               searchResultsPanel.removeAll();
-              try {
-              JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/search/sets?q="+userAnswerField1.getText()+"&client_id=QbgwbRMGAU&whitespace=1");
+              getResults();
+            }
+            public void getResults(){
+              SwingWorker<Boolean,String> worker = new SwingWorker<Boolean,String>(){
+                protected Boolean doInBackground() throws Exception {
+                  try {
+                  publish("Test");
+                  JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/search/sets?q="+userAnswerField1.getText()+"&client_id=QbgwbRMGAU&whitespace=1");
 
+                  JSONArray setArray = json.getJSONArray("sets");
+                  for (int i = 0;i<=30; i++) {
+                    JSONObject firstResult = setArray.getJSONObject(i);
+                    String title = firstResult.get("title").toString();
 
-              //System.out.println(json.getJSONArray("sets").getJSONObject(0));
-              JSONArray setArray = json.getJSONArray("sets");
-              for (int i = 0;i<=30; i++) {
-                JSONObject firstResult = setArray.getJSONObject(i);
-                String title = firstResult.get("title").toString();
+                    JSONResult resultLabel  = new JSONResult(title);
+                    resultLabel.setAlignmentX(CENTER_ALIGNMENT);
+                    resultLabel.terms = firstResult.get("term_count").toString();
+                    resultLabel.id = firstResult.get("id").toString();
+                    searchResultsPanel.add(resultLabel);
+                    searchResultsPanel.revalidate();
+                    searchResultsPanel.repaint();
+                  }
 
-                JSONResult resultLabel  = new JSONResult(title);
-                resultLabel.setAlignmentX(CENTER_ALIGNMENT);
-                resultLabel.terms = firstResult.get("term_count").toString();
-                resultLabel.id = firstResult.get("id").toString();
-                searchResultsPanel.add(resultLabel);
-                searchResultsPanel.revalidate();
-                searchResultsPanel.repaint();
+                  frame.revalidate();
+                  frame.repaint();
+                  return true;
+
+                  } catch (IOException ex){
+                  } catch (JSONException ex){
+                  } 
+                  return null;
+                }
+              protected void process(List<String> chunks){
+                System.out.println("Testing123");
+                ImageIcon ii = new ImageIcon(this.getClass().getResource("./ajax-loader.gif"));
+                    imageLabel.setIcon(ii);
+                      imageLabel.setAlignmentX(CENTER_ALIGNMENT);
+                  searchResultsPanel.add(imageLabel, java.awt.BorderLayout.CENTER);
+                  searchResultsPanel.revalidate();
+                  searchResultsPanel.repaint();
+
               }
+              protected void done(){
+            
+                try {
+                  Boolean status = get();
+                  System.out.println("Done");
+                  searchResultsPanel.remove(imageLabel);
+                  searchResultsPanel.revalidate();
+                  searchResultsPanel.repaint();
+                  
+                } catch (InterruptedException ex){
+                } catch (ExecutionException x){
+                }
+              }
+            };
+            worker.execute();
 
-              frame.revalidate();
-              frame.repaint();
-
-              } catch (IOException ex){
-              } catch (JSONException ex){
-              } 
             }
         }
 
@@ -226,12 +256,11 @@ public class QuizletFlashTest{
      } 
       public void getSearchResults(){
         String theID = this.id;
-        SwingWorker<Boolean,Void> worker = new SwingWorker<Boolean,Void>(){
+        SwingWorker<Boolean,Integer> worker = new SwingWorker<Boolean,Integer>(){
           protected Boolean doInBackground() throws Exception {
              try {
-               publish();
+               publish(12);
                JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/"+theID+"?client_id=QbgwbRMGAU&whitespace=1&total_results=40");
-
 
               //System.out.println(json.getJSONArray("sets").getJSONObject(0));
               JSONArray flashTerms = json.getJSONArray("terms");
@@ -251,13 +280,15 @@ public class QuizletFlashTest{
                }
             return null;
           }
-        protected void process(){
-          System.out.println("Testing123");
+        protected void process(List<Integer> chunks){
+          Integer number = chunks.get(chunks.size()-1);
+          System.out.println(number);
         }
         protected void done(){
       
           try {
             Boolean status = get();
+            System.out.println("DONE!");
           } catch (InterruptedException ex){
           } catch (ExecutionException x){
           }
