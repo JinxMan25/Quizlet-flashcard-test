@@ -1,5 +1,6 @@
 import java.awt.event.*;
 import java.io.*;
+import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -302,8 +303,14 @@ public class QuizletFlashTest{
 
        whatever.setLayout(new GridLayout(5,5));
        mainPanel.add(new JScrollPane(whatever), "test");
-       JButton testButton = new JButton("Go back");
-       testButton.setFont(goBack);
+       ImageIcon goBackImage = new ImageIcon(this.getClass().getResource("back.png"));
+
+       Image img = goBackImage.getImage();
+       Image newImg = img.getScaledInstance(50,50, java.awt.Image.SCALE_SMOOTH);
+       goBackImage = new ImageIcon(newImg);
+
+       JButton testButton = new JButton(goBackImage);
+
        testButton.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent ae) {
            cl.show(mainPanel, "1");
@@ -326,13 +333,12 @@ public class QuizletFlashTest{
 
      public void mouseEntered(MouseEvent e) {
 
-       this.setBackground(Color.BLACK);
-       this.setForeground(Color.WHITE);
+       this.setBackground(new Color(235,248,255));
 
      }
 
      public void mouseExited(MouseEvent e) {
-       this.setBackground(Color.white);
+       this.setBackground(new Color(238,238,238));
        this.setForeground(Color.black);
      }
     }
