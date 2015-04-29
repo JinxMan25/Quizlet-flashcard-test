@@ -1,7 +1,9 @@
 import java.awt.event.*;
+import java.io.*;
 import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -253,7 +255,12 @@ public class QuizletFlashTest{
           System.out.println("Testing123");
         }
         protected void done(){
-          Boolean status = get();
+      
+          try {
+            Boolean status = get();
+          } catch (InterruptedException ex){
+          } catch (ExecutionException x){
+          }
         }
       };
       worker.execute();
