@@ -221,7 +221,28 @@ public class QuizletFlashTest{
            cl.show(mainPanel, "1");
          }
        });
+
        whatever.add(testButton);
+
+       try {
+         JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/"+this.id+"?client_id=QbgwbRMGAU&whitespace=1&total_results=40");
+
+
+        //System.out.println(json.getJSONArray("sets").getJSONObject(0));
+        JSONArray flashTerms = json.getJSONArray("terms");
+        for (int i = 0;i<=5; i++) {
+          JSONObject firstResult = flashTerms.getJSONObject(i);
+          String title = firstResult.get("term").toString();
+
+          JLabel resultLabel  = new JLabel(title);
+          resultLabel.setAlignmentX(CENTER_ALIGNMENT);
+          whatever.add(resultLabel);
+          whatever.revalidate();
+          whatever.repaint();
+        }
+       } catch (IOException ex){
+       } catch (JSONException ex){
+       }
 
        cl.show(mainPanel,"test");
 
