@@ -1,6 +1,8 @@
 import java.awt.event.*;
+import java.awt.Graphics;
 import java.io.*;
 import java.awt.Image;
+import javax.swing.SwingConstants;
 import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -255,6 +257,22 @@ public class QuizletFlashTest{
        this.setOpaque(true);
        this.addMouseListener(this);
      } 
+      public String getMultiLine(String def){
+        int counter = 0;
+        String[] words = def.split("\\s+");
+        System.out.println(words);
+        String threeWords = "<html>";
+        for (int i = 0; i < words.length; i++) {
+        if (counter == 5){
+          threeWords = threeWords + " " + words[i] + "<br>";
+          counter = 0;
+        } else {
+        threeWords = threeWords + " " + words[i];
+        }
+        counter++;
+        }
+        return threeWords+"</html>";
+      }
       public void getSearchResults(){
         String theID = this.id;
         SwingWorker<Boolean,Integer> worker = new SwingWorker<Boolean,Integer>(){
@@ -268,8 +286,12 @@ public class QuizletFlashTest{
               for (int i = 0;i<=flashTerms.length(); i++) {
                 JSONObject firstResult = flashTerms.getJSONObject(i);
                 String title = firstResult.get("term").toString();
+                String definition = firstResult.get("definition").toString();
+                definition = getMultiLine(definition);
 
-                JButton resultLabel  = new JButton(title);
+                termsButton resultLabel  = new termsButton(title, definition);
+                //resultLabel.setHorizontalAlignment(SwingConstants.LEFT);
+                //resultLabel.setVerticalAlignment(SwingConstants.TOP);
                 resultLabel.setAlignmentX(CENTER_ALIGNMENT);
                 whatever.add(resultLabel);
                 whatever.revalidate();
@@ -343,6 +365,28 @@ public class QuizletFlashTest{
      }
     }
 
+    }
+    public static class termsButton extends JButton implements ActionListener {
+      String term, definition;
+      Boolean showingTerm = true;
+
+      public termsButton(String term, String definition){
+        super(term);
+        this.term = term;
+        this.definition = definition;
+        this.addActionListener(this);
+      }
+
+      public void actionPerformed(ActionEvent ae){
+        System.out.println("Clciedk");
+        if (showingTerm){
+          this.setText(this.definition);
+          showingTerm = false;
+        } else {
+          this.setText(this.term);
+          showingTerm = true;
+        }
+      }
     }
 }    
 
