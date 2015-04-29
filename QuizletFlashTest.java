@@ -1,12 +1,16 @@
 import java.awt.event.*;
 import javax.swing.JFrame;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
+import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.Graphics;
+import java.awt.Font;
 import java.awt.Container;
 import java.awt.image.BufferedImage;
 import java.awt.CardLayout;
@@ -52,7 +56,7 @@ public class QuizletFlashTest{
 
        //frame.setLayout(new GridLayout(1, 1));
 
-       frame.setSize(1000, 500);
+       frame.setSize(1000, 800);
        frame.setBackground(Color.WHITE);
        frame.getContentPane().add(mainPanel);
 
@@ -101,7 +105,9 @@ public class QuizletFlashTest{
           add(switchButton);
           switchButton.addActionListener(new getQuizletJSON());
           searchResultsPanel.setLayout(new BoxLayout(searchResultsPanel, BoxLayout.PAGE_AXIS));
-          add(searchResultsPanel);
+          JScrollPane searchScrollPane = new JScrollPane(searchResultsPanel);
+          searchScrollPane.setBorder(BorderFactory.createEmptyBorder());
+          add(searchScrollPane);
       }
       public void addHome(){
         try {
@@ -211,11 +217,13 @@ public class QuizletFlashTest{
      } 
 
      public void mouseClicked(MouseEvent e){
+       Font goBack = new Font("Arial", Font.BOLD, 18);
 
        JPanel whatever = new JPanel();
-       whatever.setLayout(new BoxLayout(whatever, BoxLayout.PAGE_AXIS));
-       mainPanel.add(whatever, "test");
+       whatever.setLayout(new GridLayout(5,5));
+       mainPanel.add(new JScrollPane(whatever), "test");
        JButton testButton = new JButton("Go back");
+       testButton.setFont(goBack);
        testButton.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent ae) {
            cl.show(mainPanel, "1");
@@ -230,11 +238,11 @@ public class QuizletFlashTest{
 
         //System.out.println(json.getJSONArray("sets").getJSONObject(0));
         JSONArray flashTerms = json.getJSONArray("terms");
-        for (int i = 0;i<=5; i++) {
+        for (int i = 0;i<=flashTerms.length(); i++) {
           JSONObject firstResult = flashTerms.getJSONObject(i);
           String title = firstResult.get("term").toString();
 
-          JLabel resultLabel  = new JLabel(title);
+          JButton resultLabel  = new JButton(title);
           resultLabel.setAlignmentX(CENTER_ALIGNMENT);
           whatever.add(resultLabel);
           whatever.revalidate();
