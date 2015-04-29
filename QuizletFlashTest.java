@@ -223,26 +223,41 @@ public class QuizletFlashTest{
        this.addMouseListener(this);
      } 
       public void getSearchResults(){
+        String theID = this.id;
+        SwingWorker<Boolean,Void> worker = new SwingWorker<Boolean,Void>(){
+          protected Boolean doInBackground() throws Exception {
+             try {
+               publish();
+               JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/"+theID+"?client_id=QbgwbRMGAU&whitespace=1&total_results=40");
 
-       try {
-         JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/"+this.id+"?client_id=QbgwbRMGAU&whitespace=1&total_results=40");
 
+              //System.out.println(json.getJSONArray("sets").getJSONObject(0));
+              JSONArray flashTerms = json.getJSONArray("terms");
+              for (int i = 0;i<=flashTerms.length(); i++) {
+                JSONObject firstResult = flashTerms.getJSONObject(i);
+                String title = firstResult.get("term").toString();
 
-        //System.out.println(json.getJSONArray("sets").getJSONObject(0));
-        JSONArray flashTerms = json.getJSONArray("terms");
-        for (int i = 0;i<=flashTerms.length(); i++) {
-          JSONObject firstResult = flashTerms.getJSONObject(i);
-          String title = firstResult.get("term").toString();
-
-          JButton resultLabel  = new JButton(title);
-          resultLabel.setAlignmentX(CENTER_ALIGNMENT);
-          whatever.add(resultLabel);
-          whatever.revalidate();
-          whatever.repaint();
+                JButton resultLabel  = new JButton(title);
+                resultLabel.setAlignmentX(CENTER_ALIGNMENT);
+                whatever.add(resultLabel);
+                whatever.revalidate();
+                whatever.repaint();
+              }
+              return true;
+             } catch (IOException ex){
+             } catch (JSONException ex){
+               }
+            return null;
+          }
+        protected void process(){
+          System.out.println("Testing123");
         }
-       } catch (IOException ex){
-       } catch (JSONException ex){
-       }
+        protected void done(){
+          Boolean status = get();
+        }
+      };
+      worker.execute();
+
       }
 
      public void mouseClicked(MouseEvent e){
