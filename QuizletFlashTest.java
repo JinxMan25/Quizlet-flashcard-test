@@ -366,7 +366,7 @@ public class QuizletFlashTest{
     }
 
     }
-    public static class termsButton extends JButton implements ActionListener {
+    public static class termsButton extends JButton implements ActionListener, MouseListener{
       String term, definition;
       Boolean showingTerm = true;
 
@@ -378,15 +378,38 @@ public class QuizletFlashTest{
       }
 
       public void actionPerformed(ActionEvent ae){
-        System.out.println("Clciedk");
+        System.out.println("Clicked");
         if (showingTerm){
           this.setText(this.definition);
           showingTerm = false;
         } else {
+          System.out.println(definition.substring(0,definition.length()-7));
           this.setText(this.term);
           showingTerm = true;
         }
       }
+       public void mouseEntered(MouseEvent e) {
+         System.out.println("Howver");
+         if (showingTerm){
+           this.setText(this.term+"<br>"+"Click to flip to definition</html>");
+         } else {
+           this.setText(this.definition+"<br>"+"Click to flip to term</html>");
+         }
+
+       }
+
+       public void mouseClicked(MouseEvent e) {
+         System.out.println("TEETS");
+
+       }
+       public void mouseExited(MouseEvent e) {
+
+       }
+       public void mousePressed(MouseEvent e) {
+       }
+
+       public void mouseReleased(MouseEvent e) {
+       }
     }
 }    
 
