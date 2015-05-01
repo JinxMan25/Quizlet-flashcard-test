@@ -250,7 +250,7 @@ public class QuizletFlashTest{
       public String id;
       public JPanel whatever = new JPanel();
       public String terms;
-      public Font goBack = new Font("Arial", Font.BOLD, 18);
+      public Font goBack = new Font("Arial", Font.BOLD, 15);
      
       public JSONResult(String name){
        super(name);
@@ -290,6 +290,7 @@ public class QuizletFlashTest{
                 definition = getMultiLine(definition);
 
                 termsButton resultLabel  = new termsButton(title, definition);
+                resultLabel.setFont(goBack);
                 //resultLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 //resultLabel.setVerticalAlignment(SwingConstants.TOP);
                 resultLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -323,13 +324,16 @@ public class QuizletFlashTest{
 
      public void mouseClicked(MouseEvent e){
 
-       whatever.setLayout(new GridLayout(5,5));
+       whatever.setLayout(new GridLayout(4,2));
        mainPanel.add(new JScrollPane(whatever), "test");
        ImageIcon goBackImage = new ImageIcon(this.getClass().getResource("back.png"));
 
        Image img = goBackImage.getImage();
        Image newImg = img.getScaledInstance(50,50, java.awt.Image.SCALE_SMOOTH);
        goBackImage = new ImageIcon(newImg);
+
+       JButton flashTestButton = new JButton("Test yourself b4 u rek yoself");
+       flashTestButton.setFont(new Font("Arial", Font.BOLD, 12));
 
        JButton testButton = new JButton(goBackImage);
 
@@ -340,6 +344,7 @@ public class QuizletFlashTest{
        });
 
        whatever.add(testButton);
+       whatever.add(flashTestButton);
       getSearchResults();
 
 
@@ -375,34 +380,39 @@ public class QuizletFlashTest{
         this.term = term;
         this.definition = definition;
         this.addActionListener(this);
+        this.addMouseListener(this);
       }
 
       public void actionPerformed(ActionEvent ae){
         System.out.println("Clicked");
         if (showingTerm){
+          this.setFont(new Font("Arial",Font.PLAIN,12 ));
           this.setText(this.definition);
           showingTerm = false;
         } else {
-          System.out.println(definition.substring(0,definition.length()-7));
+          this.setFont(new Font("Arial", Font.BOLD, 15));
           this.setText(this.term);
           showingTerm = true;
         }
       }
        public void mouseEntered(MouseEvent e) {
-         System.out.println("Howver");
          if (showingTerm){
-           this.setText(this.term+"<br>"+"Click to flip to definition</html>");
+           this.setText("<html>"+this.term+"<br>"+"Click to flip to definition</html>");
          } else {
-           this.setText(this.definition+"<br>"+"Click to flip to term</html>");
+           this.setText(this.definition.substring(0, definition.length()-7)+"<br>"+"Click to flip to term</html>");
          }
 
        }
 
        public void mouseClicked(MouseEvent e) {
-         System.out.println("TEETS");
 
        }
        public void mouseExited(MouseEvent e) {
+         if (showingTerm){
+           this.setText(this.term);
+         } else {
+           this.setText(this.definition);
+         }
 
        }
        public void mousePressed(MouseEvent e) {
