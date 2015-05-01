@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.util.List;
+import java.util.Random;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -44,6 +46,7 @@ public class QuizletFlashTest{
     static JPanel buttonPanel;
     static CardLayout cl = new CardLayout();
     static JPanel test = new JPanel();
+    static ExtendingClass testPanel = new ExtendingClass();
 
     public static void main(String[] args){
 
@@ -55,8 +58,11 @@ public class QuizletFlashTest{
        test.add(new JButton("test"));
 
        mainPanel.setLayout(cl);
+
        mainPanel.add(buttonPanel, "1");
        mainPanel.add(test, "2");
+       mainPanel.add(testPanel, "testPanel");
+
        cl.show(mainPanel, "1");
 
        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -248,6 +254,7 @@ public class QuizletFlashTest{
 
     public class JSONResult extends JLabel implements MouseListener{
       public String id;
+      public JSONArray flashTerms;
       public JPanel whatever = new JPanel();
       public String terms;
       public Font goBack = new Font("Arial", Font.BOLD, 15);
@@ -282,7 +289,7 @@ public class QuizletFlashTest{
                JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/"+theID+"?client_id=QbgwbRMGAU&whitespace=1&total_results=40");
 
               //System.out.println(json.getJSONArray("sets").getJSONObject(0));
-              JSONArray flashTerms = json.getJSONArray("terms");
+              flashTerms = json.getJSONArray("terms");
               for (int i = 0;i<=flashTerms.length(); i++) {
                 JSONObject firstResult = flashTerms.getJSONObject(i);
                 String title = firstResult.get("term").toString();
@@ -333,6 +340,13 @@ public class QuizletFlashTest{
        goBackImage = new ImageIcon(newImg);
 
        JButton flashTestButton = new JButton("Test yourself b4 u rek yoself");
+       flashTestButton.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent ae){
+           testPanel.setTerms(flashTerms);
+           cl.show(mainPanel, "testPanel");
+          
+         }
+       });
        flashTestButton.setFont(new Font("Arial", Font.BOLD, 12));
 
        JButton testButton = new JButton(goBackImage);
@@ -421,5 +435,47 @@ public class QuizletFlashTest{
        public void mouseReleased(MouseEvent e) {
        }
     }
+  public static class ExtendingClass extends JPanel{
+ 
+    public static JSONArray thisFlashArray;
+    public static String term;
+    public static String definition;
+    public static ArrayList<Integer> termsList;
+  
+    public ExtendingClass(){
+
+      /*
+      add(def);
+      add(t);
+
+      JTextField userEntry = new JTextField("        ");
+      add(userEntry);
+      
+      JButton checkUserClosenessToAnswer = new JButton("Check how close" +
+          " to answer you are!");
+      add(checkUserClosenessToAnswer);
+      */
+    }
+
+    public void setTerms(JSONArray flashArray){
+      thisFlashArray = flashArray;
+      termsList = new ArrayList<>();
+
+      Random generator =  new Random();
+      for(int i = 0; i < flashArray.length(); i++){
+        termsList.add(i);
+      }
+
+      int getRandomFlashCard = generator.nextInt(flashArray.length());
+      JSONObject flashObject = flashArray.getJSONObject(getRandomFlashCard);
+      String term = flashObject.get("term");
+      String definition = flashObject.get("definition");
+
+      this.add(new JButton("test"));
+
+      this.revalidate();
+        
+    }
+  }
 }    
 
