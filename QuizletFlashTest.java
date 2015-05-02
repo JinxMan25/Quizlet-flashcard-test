@@ -467,13 +467,14 @@ public class QuizletFlashTest{
       }
 
       int getRandomFlashCard = generator.nextInt(flashArray.length());
-      JSONObject flashObject = flashArray.getJSONObject(getRandomFlashCard);
-      String term = flashObject.get("term");
-      String definition = flashObject.get("definition");
-
-      this.add(new JButton("test"));
-
-      this.revalidate();
+      try {
+        JSONObject flashObject = flashArray.getJSONObject(getRandomFlashCard);
+        String term = flashObject.get("term").toString();
+        String definition = flashObject.get("definition").toString();
+        this.add(new JButton(term));
+        this.revalidate();
+      } catch(JSONException ex) {
+      }
         
     }
   }
