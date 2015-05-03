@@ -2,6 +2,7 @@ import java.awt.event.*;
 import java.awt.Graphics;
 import java.io.*;
 import java.awt.Image;
+import java.awt.BorderLayout;
 import javax.swing.SwingConstants;
 import javax.swing.JFrame;
 import java.awt.Component;
@@ -448,10 +449,12 @@ public class QuizletFlashTest{
     public static JButton backButton;
     public static JLabel randomFlashCard;
     public static JPanel theBack = new JPanel();
+    public static JPanel theFlow = new JPanel(new FlowLayout());
+    public static JPanel centerFlow = new JPanel(new FlowLayout());
  
     public ExtendingClass(){
 
-    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    this.setLayout(new BorderLayout());
     
     ImageIcon goBackImage = new ImageIcon(this.getClass().getResource("back.png"));
  
@@ -461,7 +464,8 @@ public class QuizletFlashTest{
        backButton = new JButton(goBackImage);
 
        backButton.setAlignmentX(CENTER_ALIGNMENT);
-       this.add(backButton);
+       theFlow.add(backButton);
+       this.add(theFlow, BorderLayout.WEST);
  
  
   backButton.addActionListener(new ActionListener() {
@@ -491,19 +495,24 @@ public class QuizletFlashTest{
           this.remove(userInput);
         }
 
+
         JSONObject flashObject = flashArray.getJSONObject(getRandomFlashCard);
         String term = flashObject.get("term").toString();
         String definition = flashObject.get("definition").toString();
         randomFlashCard = new JLabel(term);
-        this.add(randomFlashCard);
+        randomFlashCard.setHorizontalAlignment(SwingConstants.CENTER);
+        this.add(randomFlashCard, BorderLayout.CENTER);
+
         userInput = new JTextArea(5,20);
+        userInput.setAlignmentX(CENTER_ALIGNMENT);
+        centerFlow.add(userInput);
 
         userInput.setMaximumSize(userInput.getPreferredSize());
         userInput.setAlignmentX(CENTER_ALIGNMENT);
         randomFlashCard.setAlignmentX(CENTER_ALIGNMENT);
         
 
-        this.add(userInput);
+        this.add(centerFlow, BorderLayout.SOUTH);
         this.revalidate();
       } catch(JSONException ex) {
       }
