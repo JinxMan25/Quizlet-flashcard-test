@@ -4,6 +4,7 @@ import java.io.*;
 import java.awt.Image;
 import javax.swing.SwingConstants;
 import javax.swing.JFrame;
+import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.util.List;
@@ -15,9 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.Container;
@@ -441,12 +444,14 @@ public class QuizletFlashTest{
     public static String term;
     public static String definition;
     public static ArrayList<Integer> termsList;
-    public static JTextField userInput;  
+    public static JTextArea userInput;  
     public static JButton backButton;
     public static JLabel randomFlashCard;
+    public static JPanel theBack = new JPanel();
  
     public ExtendingClass(){
- 
+
+    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     
     ImageIcon goBackImage = new ImageIcon(this.getClass().getResource("back.png"));
  
@@ -454,6 +459,8 @@ public class QuizletFlashTest{
        Image newImg = img.getScaledInstance(50,50, java.awt.Image.SCALE_SMOOTH);
        goBackImage = new ImageIcon(newImg);
        backButton = new JButton(goBackImage);
+
+       backButton.setAlignmentX(CENTER_ALIGNMENT);
        this.add(backButton);
  
  
@@ -465,22 +472,11 @@ public class QuizletFlashTest{
   }
       }); 
        
-      /*
-      add(def);
-      add(t);
-      JTextField userEntry = new JTextField("        ");
-      add(userEntry);
-      
-      JButton checkUserClosenessToAnswer = new JButton("Check how close" +
-          " to answer you are!");
-      add(checkUserClosenessToAnswer);
-      */
     }
  
     public void setTerms(JSONArray flashArray){
       thisFlashArray = flashArray;
       termsList = new ArrayList<>();
- 
  
       Random generator =  new Random();
       for(int i = 0; i < flashArray.length(); i++){
@@ -488,18 +484,26 @@ public class QuizletFlashTest{
       }
  
       int getRandomFlashCard = generator.nextInt(flashArray.length());
+      flashArray.remove(getRandomFlashCard);
       try {
-  if(randomFlashCard != null || userInput != null){
-  this.remove(randomFlashCard);
-  this.remove(userInput);
-  }
+        if(randomFlashCard != null || userInput != null){
+          this.remove(randomFlashCard);
+          this.remove(userInput);
+        }
+
         JSONObject flashObject = flashArray.getJSONObject(getRandomFlashCard);
         String term = flashObject.get("term").toString();
         String definition = flashObject.get("definition").toString();
         randomFlashCard = new JLabel(term);
         this.add(randomFlashCard);
-  userInput = new JTextField("      ");
-  this.add(userInput);
+        userInput = new JTextArea(5,20);
+
+        userInput.setMaximumSize(userInput.getPreferredSize());
+        userInput.setAlignmentX(CENTER_ALIGNMENT);
+        randomFlashCard.setAlignmentX(CENTER_ALIGNMENT);
+        
+
+        this.add(userInput);
         this.revalidate();
       } catch(JSONException ex) {
       }
