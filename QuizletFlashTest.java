@@ -450,6 +450,7 @@ public class QuizletFlashTest{
     public static JLabel randomFlashCard;
     public static JPanel theBack = new JPanel();
     public static JPanel theFlow = new JPanel(new FlowLayout());
+    public static JPanel theFlow2 = new JPanel(new FlowLayout());
     public static JPanel centerFlow = new JPanel(new FlowLayout());
  
     public ExtendingClass(){
@@ -462,10 +463,13 @@ public class QuizletFlashTest{
        Image newImg = img.getScaledInstance(50,50, java.awt.Image.SCALE_SMOOTH);
        goBackImage = new ImageIcon(newImg);
        backButton = new JButton(goBackImage);
+       JButton backButton2 = new JButton(goBackImage);
 
        backButton.setAlignmentX(CENTER_ALIGNMENT);
        theFlow.add(backButton);
+       theFlow2.add(backButton2);
        this.add(theFlow, BorderLayout.WEST);
+       this.add(theFlow2, BorderLayout.EAST);
  
  
   backButton.addActionListener(new ActionListener() {
