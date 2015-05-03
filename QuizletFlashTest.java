@@ -511,6 +511,13 @@ public class QuizletFlashTest{
         userInput = new JTextArea(5,20);
         userInput.setAlignmentX(CENTER_ALIGNMENT);
         centerFlow.add(userInput);
+        JButton checkButton = new JButton("Check answer");
+        checkButton.setAlignmentX(CENTER_ALIGNMENT);
+        checkButton.addActionListener(new ActionListener(){
+          public void actionPerformed(ActionEvent ae){
+          }
+        });
+        centerFlow.add(checkButton);
 
         userInput.setMaximumSize(userInput.getPreferredSize());
         userInput.setAlignmentX(CENTER_ALIGNMENT);
