@@ -451,11 +451,12 @@ public class QuizletFlashTest{
     public static JPanel theBack = new JPanel();
     public static JPanel theFlow = new JPanel(new FlowLayout());
     public static JPanel theFlow2 = new JPanel(new FlowLayout());
-    public static JPanel centerFlow = new JPanel(new FlowLayout());
+    public static JPanel centerFlow = new JPanel();
  
     public ExtendingClass(){
 
     this.setLayout(new BorderLayout());
+    centerFlow.setLayout(new BoxLayout(centerFlow, BoxLayout.PAGE_AXIS));
     
     ImageIcon goBackImage = new ImageIcon(this.getClass().getResource("back.png"));
  
@@ -468,6 +469,7 @@ public class QuizletFlashTest{
        backButton.setAlignmentX(CENTER_ALIGNMENT);
        theFlow.add(backButton);
        theFlow2.add(backButton2);
+       backButton2.setVisible(false);
        this.add(theFlow, BorderLayout.WEST);
        this.add(theFlow2, BorderLayout.EAST);
  
@@ -495,8 +497,7 @@ public class QuizletFlashTest{
       flashArray.remove(getRandomFlashCard);
       try {
         if(randomFlashCard != null || userInput != null){
-          this.remove(randomFlashCard);
-          this.remove(userInput);
+          centerFlow.removeAll();
         }
 
 
@@ -505,7 +506,7 @@ public class QuizletFlashTest{
         String definition = flashObject.get("definition").toString();
         randomFlashCard = new JLabel(term);
         randomFlashCard.setHorizontalAlignment(SwingConstants.CENTER);
-        this.add(randomFlashCard, BorderLayout.CENTER);
+        centerFlow.add(randomFlashCard);
 
         userInput = new JTextArea(5,20);
         userInput.setAlignmentX(CENTER_ALIGNMENT);
@@ -516,8 +517,9 @@ public class QuizletFlashTest{
         randomFlashCard.setAlignmentX(CENTER_ALIGNMENT);
         
 
-        this.add(centerFlow, BorderLayout.SOUTH);
+        this.add(centerFlow, BorderLayout.CENTER);
         this.revalidate();
+        frame.setSize(800, 350);
       } catch(JSONException ex) {
       }
         
