@@ -38,41 +38,41 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.nio.charset.Charset;
 import java.awt.Color;
-
+ 
 public class QuizletFlashTest{
-
+ 
     static JFrame frame;
     static JPanel mainPanel;
     static JPanel buttonPanel;
     static CardLayout cl = new CardLayout();
     static JPanel test = new JPanel();
     static ExtendingClass testPanel = new ExtendingClass();
-
+ 
     public static void main(String[] args){
-
+ 
        frame = new JFrame("Quizlet");
-
+ 
        mainPanel = new JPanel();
        QuizletPanel buttonPanel = new QuizletPanel(frame);
-
+ 
        test.add(new JButton("test"));
-
+ 
        mainPanel.setLayout(cl);
-
+ 
        mainPanel.add(buttonPanel, "1");
        mainPanel.add(test, "2");
        mainPanel.add(testPanel, "testPanel");
-
+ 
        cl.show(mainPanel, "1");
-
+ 
        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+ 
        //frame.setLayout(new GridLayout(1, 1));
-
+ 
        frame.setSize(1000, 800);
        frame.setBackground(Color.WHITE);
        frame.getContentPane().add(mainPanel);
-
+ 
        frame.setVisible(true);
     }
     public static class QuizletPanel extends JPanel{
@@ -84,19 +84,19 @@ public class QuizletFlashTest{
         JLabel verdict;
         JFrame frame;
         JLabel imageLabel = new JLabel();
-
+ 
         
-
+ 
         public QuizletPanel(JFrame theFrame){
           frame = theFrame;
           
         addHomePage();    
-
+ 
       }
       public void addHomePage(){
-
+ 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-
+ 
         try {
           image = ImageIO.read(new File("Quizlet_logo.png"));
           JLabel piclabel = new JLabel(new ImageIcon(image));
@@ -104,7 +104,7 @@ public class QuizletFlashTest{
           add(piclabel);
         } catch (IOException ex){
         }
-
+ 
           search = new JLabel("Search: ");
           search.setAlignmentX(CENTER_ALIGNMENT);
           add(search);
@@ -130,7 +130,7 @@ public class QuizletFlashTest{
           frame.getContentPane().add(piclabel);
         } catch (IOException ex){
         }
-
+ 
           search = new JLabel("Search: ");
           search.setAlignmentX(CENTER_ALIGNMENT);
           frame.getContentPane().add(search);
@@ -149,14 +149,14 @@ public class QuizletFlashTest{
       public void removeHomePage(){
         System.out.println("Test");
         Container pane = frame.getContentPane();
-
+ 
         pane.remove(QuizletPanel.this);
         pane.revalidate();
         pane.repaint();
         revalidate();
         repaint();
       }
-
+ 
       private String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
@@ -165,7 +165,7 @@ public class QuizletFlashTest{
         }
         return sb.toString();
       }
-
+ 
       public JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
         InputStream is = new URL(url).openStream();
         try {
@@ -177,9 +177,9 @@ public class QuizletFlashTest{
           is.close();
         }
       }
-
+ 
         class SetUpButtonActionListener implements ActionListener{
-
+ 
             public void actionPerformed(ActionEvent ae) {
                 userAnswerField1.setText("          ");
                 
@@ -188,7 +188,7 @@ public class QuizletFlashTest{
             }
         }
         class getQuizletJSON implements ActionListener{
-
+ 
             public void actionPerformed(ActionEvent ae) {
               searchResultsPanel.removeAll();
               getResults();
@@ -199,12 +199,12 @@ public class QuizletFlashTest{
                   try {
                   publish("Test");
                   JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/search/sets?q="+userAnswerField1.getText()+"&client_id=QbgwbRMGAU&whitespace=1");
-
+ 
                   JSONArray setArray = json.getJSONArray("sets");
                   for (int i = 0;i<=30; i++) {
                     JSONObject firstResult = setArray.getJSONObject(i);
                     String title = firstResult.get("title").toString();
-
+ 
                     JSONResult resultLabel  = new JSONResult(title);
                     resultLabel.setAlignmentX(CENTER_ALIGNMENT);
                     resultLabel.terms = firstResult.get("term_count").toString();
@@ -213,11 +213,11 @@ public class QuizletFlashTest{
                     searchResultsPanel.revalidate();
                     searchResultsPanel.repaint();
                   }
-
+ 
                   frame.revalidate();
                   frame.repaint();
                   return true;
-
+ 
                   } catch (IOException ex){
                   } catch (JSONException ex){
                   } 
@@ -231,7 +231,7 @@ public class QuizletFlashTest{
                   searchResultsPanel.add(imageLabel, java.awt.BorderLayout.CENTER);
                   searchResultsPanel.revalidate();
                   searchResultsPanel.repaint();
-
+ 
               }
               protected void done(){
             
@@ -248,10 +248,10 @@ public class QuizletFlashTest{
               }
             };
             worker.execute();
-
+ 
             }
         }
-
+ 
     public class JSONResult extends JLabel implements MouseListener{
       public String id;
       public JSONArray flashTerms;
@@ -281,13 +281,13 @@ public class QuizletFlashTest{
         return threeWords+"</html>";
       }
       public void getSearchResults(){
-        String theID = this.id;
+        final String theID = this.id;
         SwingWorker<Boolean,Integer> worker = new SwingWorker<Boolean,Integer>(){
           protected Boolean doInBackground() throws Exception {
              try {
                publish(12);
                JSONObject json = readJsonFromUrl("https://api.quizlet.com/2.0/sets/"+theID+"?client_id=QbgwbRMGAU&whitespace=1&total_results=40");
-
+ 
               //System.out.println(json.getJSONArray("sets").getJSONObject(0));
               flashTerms = json.getJSONArray("terms");
               for (int i = 0;i<=flashTerms.length(); i++) {
@@ -295,7 +295,7 @@ public class QuizletFlashTest{
                 String title = firstResult.get("term").toString();
                 String definition = firstResult.get("definition").toString();
                 definition = getMultiLine(definition);
-
+ 
                 termsButton resultLabel  = new termsButton(title, definition);
                 resultLabel.setFont(goBack);
                 //resultLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -326,19 +326,19 @@ public class QuizletFlashTest{
         }
       };
       worker.execute();
-
+ 
       }
-
+ 
      public void mouseClicked(MouseEvent e){
-
+ 
        whatever.setLayout(new GridLayout(4,2));
        mainPanel.add(new JScrollPane(whatever), "test");
        ImageIcon goBackImage = new ImageIcon(this.getClass().getResource("back.png"));
-
+ 
        Image img = goBackImage.getImage();
        Image newImg = img.getScaledInstance(50,50, java.awt.Image.SCALE_SMOOTH);
        goBackImage = new ImageIcon(newImg);
-
+ 
        JButton flashTestButton = new JButton("Test yourself b4 u rek yoself");
        flashTestButton.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent ae){
@@ -348,47 +348,47 @@ public class QuizletFlashTest{
          }
        });
        flashTestButton.setFont(new Font("Arial", Font.BOLD, 12));
-
+ 
        JButton testButton = new JButton(goBackImage);
-
+ 
        testButton.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent ae) {
            cl.show(mainPanel, "1");
          }
        });
-
+ 
        whatever.add(testButton);
        whatever.add(flashTestButton);
       getSearchResults();
-
-
+ 
+ 
        cl.show(mainPanel,"test");
-
+ 
      }
-
+ 
      public void mousePressed(MouseEvent e) {
      }
-
+ 
      public void mouseReleased(MouseEvent e) {
      }
-
+ 
      public void mouseEntered(MouseEvent e) {
-
+ 
        this.setBackground(new Color(235,248,255));
-
+ 
      }
-
+ 
      public void mouseExited(MouseEvent e) {
        this.setBackground(new Color(238,238,238));
        this.setForeground(Color.black);
      }
     }
-
+ 
     }
     public static class termsButton extends JButton implements ActionListener, MouseListener{
       String term, definition;
       Boolean showingTerm = true;
-
+ 
       public termsButton(String term, String definition){
         super(term);
         this.term = term;
@@ -396,7 +396,7 @@ public class QuizletFlashTest{
         this.addActionListener(this);
         this.addMouseListener(this);
       }
-
+ 
       public void actionPerformed(ActionEvent ae){
         System.out.println("Clicked");
         if (showingTerm){
@@ -415,11 +415,11 @@ public class QuizletFlashTest{
          } else {
            this.setText(this.definition.substring(0, definition.length()-7)+"<br>"+"Click to flip to term</html>");
          }
-
+ 
        }
-
+ 
        public void mouseClicked(MouseEvent e) {
-
+ 
        }
        public void mouseExited(MouseEvent e) {
          if (showingTerm){
@@ -427,11 +427,11 @@ public class QuizletFlashTest{
          } else {
            this.setText(this.definition);
          }
-
+ 
        }
        public void mousePressed(MouseEvent e) {
        }
-
+ 
        public void mouseReleased(MouseEvent e) {
        }
     }
@@ -441,13 +441,33 @@ public class QuizletFlashTest{
     public static String term;
     public static String definition;
     public static ArrayList<Integer> termsList;
-  
+    public static JTextField userInput;  
+    public static JButton backButton;
+    public static JLabel randomFlashCard;
+ 
     public ExtendingClass(){
-
+ 
+    
+    ImageIcon goBackImage = new ImageIcon(this.getClass().getResource("back.png"));
+ 
+       Image img = goBackImage.getImage();
+       Image newImg = img.getScaledInstance(50,50, java.awt.Image.SCALE_SMOOTH);
+       goBackImage = new ImageIcon(newImg);
+       backButton = new JButton(goBackImage);
+       this.add(backButton);
+ 
+ 
+  backButton.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+    
+        cl.show(mainPanel, "test");
+  
+  }
+      }); 
+       
       /*
       add(def);
       add(t);
-
       JTextField userEntry = new JTextField("        ");
       add(userEntry);
       
@@ -456,27 +476,34 @@ public class QuizletFlashTest{
       add(checkUserClosenessToAnswer);
       */
     }
-
+ 
     public void setTerms(JSONArray flashArray){
       thisFlashArray = flashArray;
       termsList = new ArrayList<>();
-
+ 
+ 
       Random generator =  new Random();
       for(int i = 0; i < flashArray.length(); i++){
         termsList.add(i);
       }
-
+ 
       int getRandomFlashCard = generator.nextInt(flashArray.length());
       try {
+  if(randomFlashCard != null || userInput != null){
+  this.remove(randomFlashCard);
+  this.remove(userInput);
+  }
         JSONObject flashObject = flashArray.getJSONObject(getRandomFlashCard);
         String term = flashObject.get("term").toString();
         String definition = flashObject.get("definition").toString();
-        this.add(new JButton(term));
+        randomFlashCard = new JLabel(term);
+        this.add(randomFlashCard);
+  userInput = new JTextField("      ");
+  this.add(userInput);
         this.revalidate();
       } catch(JSONException ex) {
       }
         
     }
   }
-}    
-
+}  
