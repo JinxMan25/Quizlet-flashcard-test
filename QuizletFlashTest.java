@@ -8,7 +8,9 @@ import javax.swing.JFrame;
 import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import java.awt.Graphics;
 import java.util.List;
+import javax.swing.JComponent;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +48,9 @@ import java.awt.Color;
 public class QuizletFlashTest{
  
     static JFrame frame;
+    public static Boolean checkedTerm = false;
     static JPanel mainPanel;
+    static public double distance;
     static JPanel buttonPanel;
     static CardLayout cl = new CardLayout();
     static JPanel test = new JPanel();
@@ -439,6 +443,31 @@ public class QuizletFlashTest{
        public void mouseReleased(MouseEvent e) {
        }
     }
+    public static class testPaint extends JComponent {
+      public void paintComponent(Graphics g){
+        if (checkedTerm == true){
+        super.paintComponent(g);
+        g.setColor(Color.WHITE);
+        g.fillRect(305,20,100,25);
+        if (distance >= 90){
+          g.setColor(Color.GREEN);
+        g.fillRect(305,20,100,25);
+        } else if (distance >= 75){
+          g.setColor(new Color(216,255,174));
+        g.fillRect(305,20,75,25);
+        } else if (distance >= 50){
+          g.setColor(Color.YELLOW);
+        g.fillRect(305,20,62,25);
+        } else if (distance >= 35){
+          g.setColor(new Color(235,162,117));
+        g.fillRect(305,20,40,25);
+        } else if ( distance >= 0){
+          g.setColor(Color.RED);
+        g.fillRect(305,20,15,25);
+        }
+        }
+      }
+    }
   public static class ExtendingClass extends JPanel{
  
     public static JSONArray thisFlashArray;
@@ -502,8 +531,8 @@ public class QuizletFlashTest{
 
 
         JSONObject flashObject = flashArray.getJSONObject(getRandomFlashCard);
-        String term = flashObject.get("term").toString();
-        String definition = flashObject.get("definition").toString();
+        term = flashObject.get("term").toString();
+        definition = flashObject.get("definition").toString();
         randomFlashCard = new JLabel(term);
         randomFlashCard.setHorizontalAlignment(SwingConstants.CENTER);
         centerFlow.add(randomFlashCard);
@@ -512,12 +541,22 @@ public class QuizletFlashTest{
         userInput.setAlignmentX(CENTER_ALIGNMENT);
         centerFlow.add(userInput);
         JButton checkButton = new JButton("Check answer");
+        JLabel testLabel = new JLabel("          ");
+        testLabel.setAlignmentX(CENTER_ALIGNMENT);
+
         checkButton.setAlignmentX(CENTER_ALIGNMENT);
         checkButton.addActionListener(new ActionListener(){
           public void actionPerformed(ActionEvent ae){
+            checkedTerm = true;
+
+            distance = jaccard.Jaccard2(definition, userInput.getText());
+            distance = (1-(distance-0.05))*100;
+            repaint();
           }
         });
         centerFlow.add(checkButton);
+        centerFlow.add(testLabel);
+        centerFlow.add(new testPaint());
 
         userInput.setMaximumSize(userInput.getPreferredSize());
         userInput.setAlignmentX(CENTER_ALIGNMENT);
